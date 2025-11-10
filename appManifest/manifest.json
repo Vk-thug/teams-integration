@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "1.0.0",
+  "id": "5ba8b67f-15ec-4acf-9f48-dc59763b5259",
+  "developer": {
+    "name": "Bot@Work",
+    "websiteUrl": "https://botatwork.com",
+    "privacyUrl": "https://botatwork.com/privacy",
+    "termsOfUseUrl": "https://botatwork.com/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Bot@Work MOM",
+    "full": "Bot@Work Meeting Minutes Assistant"
+  },
+  "description": {
+    "short": "AI assistant that automates meeting minutes for Microsoft Teams meetings.",
+    "full": "Bot@Work revolutionizes workplace productivity by automating repetitive tasks. This intelligent bot seamlessly captures meeting transcripts, generates comprehensive Minutes of Meeting (MOM), and extracts action items - all integrated directly into your Microsoft Teams workflow. Empower your team with AI-powered meeting assistance that saves time and ensures no critical information is missed."
+  },
+  "accentColor": "#235EA5",
+  "bots": [
+    {
+      "botId": "7b6a4c3e-d110-456d-93fb-de6984f77865",
+      "scopes": [
+        "personal",
+        "team",
+        "groupChat"
+      ],
+      "isNotificationOnly": false
+    }
+  ],
+  "staticTabs": [
+    {
+      "entityId": "BotMeetingTab",
+      "name": "Bot@Work MOM",
+      "contentUrl": "https://bc6e286bdc2b.ngrok-free.app/tab",
+      "websiteUrl": "https://bc6e286bdc2b.ngrok-free.app",
+      "scopes": [
+        "team",
+        "groupChat",
+        "personal"
+      ],
+      "context": [
+        "meetingChatTab",
+        "meetingDetailsTab",
+        "meetingSidePanel",
+        "meetingStage"
+      ]
+    }
+  ],
+  "validDomains": [
+    "bc6e286bdc2b.ngrok-free.app"
+  ],
+  "permissions": [
+    "messageTeamMembers"
+  ],
+  "webApplicationInfo": {
+    "id": "7b6a4c3e-d110-456d-93fb-de6984f77865",
+    "resource": "https://RscPermission"
+  },
+  "authorization": {
+    "permissions": {
+      "resourceSpecific": [
+        {
+          "name": "OnlineMeeting.ReadBasic.Chat",
+          "type": "Application"
+        }
+      ]
+    }
+  },
+  "defaultInstallScope": "meetings"
+}
