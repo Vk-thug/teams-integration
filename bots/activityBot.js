@@ -46,8 +46,11 @@ class ActivityBot extends TeamsActivityHandler {
         }
 
         // Activity handler for meeting end event.
-        this.onTeamsMeetingEndEvent(async (meeting, context, next) => {
-          var meetingDetails = await TeamsInfo.getMeetingInfo(context);
+      this.onTeamsMeetingEndEvent(async (meeting, context, next) => {
+          // console.log('Meeting ended event received', context);
+        var meetingDetails = await TeamsInfo.getMeetingInfo(context);
+        // console.log('Meeting ended event received', meetingDetails);
+        console.log(JSON.stringify(meetingDetails, null, 2));
           var graphHelper = new GraphHelper();
 
           var result = await graphHelper.GetMeetingTranscriptionsAsync(meetingDetails.details.msGraphResourceId);
@@ -65,7 +68,8 @@ class ActivityBot extends TeamsActivityHandler {
                 data: result
               });
             }
-
+            console.log("Meeting Info: " + result);
+            console.log("Transcript saved for meeting id: " + meetingDetails.details.msGraphResourceId);
             var cardJson = {
               "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
               "version": "1.5",
@@ -91,7 +95,7 @@ class ActivityBot extends TeamsActivityHandler {
                 }
               ]
             };
-
+            console.log("cardJson " + cardJson);
             await context.sendActivity({ attachments: [CardFactory.adaptiveCard(cardJson)] });
           }
           else

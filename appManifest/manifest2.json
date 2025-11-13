@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
   "manifestVersion": "1.19",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "id": "5ba8b67f-15ec-4acf-9f48-dc59763b5259",
   "developer": {
     "name": "Botatwork",
@@ -14,8 +14,8 @@
     "outline": "outline.png"
   },
   "name": {
-    "short": "Botatwork",
-    "full": "Botatwork Meeting Of Minutes Bot"
+    "short": "Botatwork MOM",
+    "full": "Botatwork Meeting Minutes Assistant"
   },
   "description": {
     "short": "AI assistant that automates meeting minutes for Microsoft Teams meetings.",
@@ -24,26 +24,31 @@
   "accentColor": "#235EA5",
   "bots": [
     {
-      "botId": "2203cb6a-9efc-4ccb-968d-cf66714ff130",
+      "botId": "7b6a4c3e-d110-456d-93fb-de6984f77865",
       "scopes": [
+        "personal",
+        "team",
         "groupChat"
       ],
-      "isNotificationOnly": false,
-      "supportsCalling": false,
-      "supportsVideo": false
+      "isNotificationOnly": false
     }
   ],
-  "configurableTabs": [
+  "staticTabs": [
     {
-      "configurationUrl": "https://ernie-nontarred-unmanfully.ngrok-free.dev/config",
-      "canUpdateConfiguration": true,
+      "entityId": "BotMeetingTab",
+      "name": "Botatwork MOM",
+      "contentUrl": "https://ernie-nontarred-unmanfully.ngrok-free.dev/tab",
+      "websiteUrl": "https://ernie-nontarred-unmanfully.ngrok-free.dev",
       "scopes": [
-        "groupChat"
+        "team",
+        "groupChat",
+        "personal"
       ],
       "context": [
         "meetingChatTab",
         "meetingDetailsTab",
-        "meetingSidePanel"
+        "meetingSidePanel",
+        "meetingStage"
       ]
     }
   ],
@@ -54,8 +59,8 @@
     "messageTeamMembers"
   ],
   "webApplicationInfo": {
-    "id": "2203cb6a-9efc-4ccb-968d-cf66714ff130",
-    "resource": "https://api.botframework.com"
+    "id": "7b6a4c3e-d110-456d-93fb-de6984f77865",
+    "resource": "https://RscPermission"
   },
   "authorization": {
     "permissions": {

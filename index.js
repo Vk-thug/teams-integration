@@ -48,7 +48,7 @@ adapter.onTurnError = async (context, error) => {
     );
 
     // Uncomment below commented line for local debugging.
-    // await context.sendActivity(`Sorry, it looks like something went wrong. Exception Caught: ${error}`);
+    await context.sendActivity(`Sorry, it looks like something went wrong. Exception Caught: ${error}`);
 
 };
 
@@ -75,6 +75,7 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
 
 // Returns view to be open in task module.
 server.get('/home', async (req, res) => {
+    console.log("Home view requested.");
     var transcript = "Transcript not found."
     if (req.query?.meetingId) {
         var foundIndex = transcriptsDictionary.findIndex((x) => x.id === req.query?.meetingId);
@@ -99,8 +100,45 @@ server.get('/home', async (req, res) => {
     res.render('./views/', { transcript: transcript });
 });
 
+server.get('/tab', async (req, res) => {
+    res.render('./views/tab');
+});
+
+// Configuration page for the tab
+server.get('/config', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <script src="https://res.cdn.office.net/teams-js/2.19.0/js/MicrosoftTeams.min.js"></script>
+    </head>
+    <body>
+      <h2>Botatwork MOM Bot Configuration</h2>
+      <p>Click Save to add this tab to your meeting.</p>
+      
+      <script>
+        microsoftTeams.app.initialize().then(() => {
+          microsoftTeams.pages.config.registerOnSaveHandler((saveEvent) => {
+            microsoftTeams.pages.config.setConfig({
+              websiteUrl: "https://ernie-nontarred-unmanfully.ngrok-free.dev/tab",
+              contentUrl: "https://ernie-nontarred-unmanfully.ngrok-free.dev/tab",
+              entityId: "BotMeetingTab",
+              suggestedDisplayName: "Botatwork MOM"
+            });
+            saveEvent.notifySuccess();
+          });
+
+          microsoftTeams.pages.config.setValidityState(true);
+        });
+      </script>
+    </body>
+    </html>
+  `);
+});
+
 // Listen for incoming activities and route them to your bot main dialog.
 server.post('/api/messages', async (req, res) => {
+    console.log("Message Post requested.", req, res);
     // Route received a request to adapter for processing
     await adapter.process(req, res, (context) => bot.run(context));
 });

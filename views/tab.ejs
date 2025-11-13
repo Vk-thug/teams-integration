@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Minutes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #242424;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Meeting Info Dropdown */
+        .meeting-info-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .meeting-dropdown {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            color: #242424;
+            transition: border-color 0.2s;
+        }
+
+        .meeting-dropdown:hover {
+            border-color: #6264a7;
+        }
+
+        .meeting-dropdown:focus {
+            outline: none;
+            border-color: #6264a7;
+            box-shadow: 0 0 0 2px rgba(98, 100, 167, 0.1);
+        }
+
+        /* Main Content Area */
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Video Section - Left Side */
+        .video-section {
+            flex: 1;
+            background-color: #1f1f1f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            min-height: 600px;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: #d0d0d0;
+        }
+
+        .video-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .video-title {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: background-color 0.2s;
+        }
+
+        .play-button:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 24px solid #fff;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            margin-left: 6px;
+        }
+
+        .video-metadata {
+            color: #a0a0a0;
+            font-size: 13px;
+            margin-top: 30px;
+            text-align: left;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .metadata-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metadata-label {
+            color: #8a8a8a;
+        }
+
+        .metadata-value {
+            color: #d0d0d0;
+            font-weight: 500;
+        }
+
+        .stream-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* MOM Content - Right Side */
+        .mom-section {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: #fff;
+        }
+
+        .mom-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid #6264a7;
+            padding-bottom: 16px;
+        }
+
+        .mom-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #242424;
+            margin-bottom: 8px;
+        }
+
+        .mom-subtitle {
+            font-size: 14px;
+            color: #616161;
+        }
+
+        .mom-content {
+            line-height: 1.8;
+        }
+
+        .mom-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #242424;
+            margin-top: 30px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mom-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .section-icon {
+            font-size: 24px;
+        }
+
+        .mom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mom-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            border-left: 3px solid #e1e1e1;
+            margin-left: 10px;
+            color: #424242;
+        }
+
+        .mom-list li:before {
+            content: "•";
+            position: absolute;
+            left: -8px;
+            top: 12px;
+            width: 16px;
+            height: 16px;
+            background-color: #6264a7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .mom-list li strong {
+            color: #242424;
+            font-weight: 600;
+        }
+
+        .action-item {
+            background-color: #fff4e5;
+            padding: 16px;
+            border-left: 4px solid #ff9800;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .action-item-title {
+            font-weight: 600;
+            color: #242424;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-item-details {
+            font-size: 14px;
+            color: #616161;
+            margin-top: 4px;
+        }
+
+        .attendees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .attendee-card {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #424242;
+        }
+
+        .attendee-name {
+            font-weight: 600;
+            color: #242424;
+        }
+
+        .decision-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .decision-box p {
+            margin: 0;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+
+            .video-section {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .mom-section {
+                padding: 20px;
+            }
+
+            .video-section {
+                padding: 20px;
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Meeting Info Dropdown -->
+        <div class="meeting-info-container">
+            <select class="meeting-dropdown" id="meetingSelect">
+                <option value="">Select a meeting...</option>
+                <option value="meeting1" selected>Weekly review with F1 - 03 November 2025 14:35 - 15:55</option>
+                <option value="meeting2">Team Standup - 02 November 2025 10:00 - 10:30</option>
+                <option value="meeting3">Project Planning - 01 November 2025 15:00 - 16:00</option>
+                <option value="meeting4">Client Review - 31 October 2025 14:00 - 15:00</option>
+                <option value="meeting5">Sprint Retrospective - 30 October 2025 16:00 - 17:00</option>
+            </select>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-wrapper">
+            <!-- Video Section - Left Side -->
+            <div class="video-section">
+                <div class="video-placeholder">
+                    <div class="video-icon">🎥</div>
+                    <h2 class="video-title">Weekly review with F1</h2>
+                    <div class="play-button">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+
+                <div class="video-metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Recorded by</span>
+                        <span class="metadata-value">Soumya</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Organized by</span>
+                        <span class="metadata-value">Venkat Reddy</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Date</span>
+                        <span class="metadata-value">2025-11-03 09:13 UTC</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Duration</span>
+                        <span class="metadata-value">1h 20m</span>
+                    </div>
+                </div>
+
+                <div class="stream-badge">Microsoft Stream</div>
+            </div>
+
+            <!-- MOM Content - Right Side -->
+            <div class="mom-section">
+                <div class="mom-header">
+                    <h1 class="mom-title">Minutes of Meeting (MOM)</h1>
+                    <p class="mom-subtitle">Weekly review with F1 • 03 November 2025</p>
+                </div>
+
+                <div class="mom-content">
+                    <!-- Attendees Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">👥</span>
+                        Attendees
+                    </h2>
+                    <div class="attendees-grid">
+                        <div class="attendee-card">
+                            <div class="attendee-name">Venkat Reddy</div>
+                            <div>Organizer</div>
+                        </div>
+                        <div class="attendee-card">
+                            <div class="attendee-name">Soumya</div>
+                            <div>Participant</div>
+                        </div>
+                        <div class="attendee-card">
+                            <div class="attendee-name">John Smith</div>
+                            <div>Participant</div>
+                        </div>
+                        <div class="attendee-card">
+                            <div class="attendee-name">Sarah Johnson</div>
+                            <div>Participant</div>
+                        </div>
+                    </div>
+
+                    <!-- Agenda Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">📋</span>
+                        Agenda
+                    </h2>
+                    <ul class="mom-list">
+                        <li>Review previous week's deliverables and milestones</li>
+                        <li>Discuss current sprint progress and blockers</li>
+                        <li>Plan upcoming week's priorities and assignments</li>
+                        <li>Address technical challenges and solutions</li>
+                        <li>Review stakeholder feedback and action items</li>
+                    </ul>
+
+                    <!-- Discussion Points Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">💬</span>
+                        Discussion Points
+                    </h2>
+                    <ul class="mom-list">
+                        <li><strong>Sprint Progress:</strong> Team completed 85% of planned stories. Two items moved to
+                            next sprint due to dependency issues.</li>
+                        <li><strong>Technical Challenges:</strong> Database performance optimization required. Team
+                            proposed implementing caching layer.</li>
+                        <li><strong>Client Feedback:</strong> Positive response on UI changes. Requested additional
+                            reporting features.</li>
+                        <li><strong>Resource Allocation:</strong> Additional developer needed for Q1 2026. Hiring
+                            process to begin next week.</li>
+                        <li><strong>Timeline Review:</strong> Project on track for December release. Buffer week added
+                            for testing.</li>
+                    </ul>
+
+                    <!-- Decisions Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">✅</span>
+                        Decisions Made
+                    </h2>
+                    <div class="decision-box">
+                        <p>✓ Approved implementation of Redis caching for improved performance</p>
+                    </div>
+                    <div class="decision-box">
+                        <p>✓ Agreed to extend sprint duration by 2 days to accommodate testing</p>
+                    </div>
+                    <div class="decision-box">
+                        <p>✓ Greenlit hiring of senior full-stack developer for Q1 2026</p>
+                    </div>
+                    <div class="decision-box">
+                        <p>✓ Confirmed December 15th as release date with stakeholders</p>
+                    </div>
+
+                    <!-- Action Items Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">🎯</span>
+                        Action Items
+                    </h2>
+
+                    <div class="action-item">
+                        <div class="action-item-title">
+                            <span>🔸</span>
+                            <span>Implement Redis caching layer</span>
+                        </div>
+                        <div class="action-item-details">
+                            <strong>Assigned to:</strong> John Smith<br>
+                            <strong>Due date:</strong> November 10, 2025<br>
+                            <strong>Priority:</strong> High
+                        </div>
+                    </div>
+
+                    <div class="action-item">
+                        <div class="action-item-title">
+                            <span>🔸</span>
+                            <span>Create job description for full-stack developer role</span>
+                        </div>
+                        <div class="action-item-details">
+                            <strong>Assigned to:</strong> Venkat Reddy<br>
+                            <strong>Due date:</strong> November 7, 2025<br>
+                            <strong>Priority:</strong> Medium
+                        </div>
+                    </div>
+
+                    <div class="action-item">
+                        <div class="action-item-title">
+                            <span>🔸</span>
+                            <span>Prepare reporting features mockup for client review</span>
+                        </div>
+                        <div class="action-item-details">
+                            <strong>Assigned to:</strong> Sarah Johnson<br>
+                            <strong>Due date:</strong> November 12, 2025<br>
+                            <strong>Priority:</strong> Medium
+                        </div>
+                    </div>
+
+                    <div class="action-item">
+                        <div class="action-item-title">
+                            <span>🔸</span>
+                            <span>Conduct performance testing on staging environment</span>
+                        </div>
+                        <div class="action-item-details">
+                            <strong>Assigned to:</strong> Soumya<br>
+                            <strong>Due date:</strong> November 15, 2025<br>
+                            <strong>Priority:</strong> High
+                        </div>
+                    </div>
+
+                    <div class="action-item">
+                        <div class="action-item-title">
+                            <span>🔸</span>
+                            <span>Schedule follow-up meeting with stakeholders</span>
+                        </div>
+                        <div class="action-item-details">
+                            <strong>Assigned to:</strong> Venkat Reddy<br>
+                            <strong>Due date:</strong> November 8, 2025<br>
+                            <strong>Priority:</strong> Low
+                        </div>
+                    </div>
+
+                    <!-- Next Meeting Section -->
+                    <h2 class="mom-section-title">
+                        <span class="section-icon">📅</span>
+                        Next Meeting
+                    </h2>
+                    <ul class="mom-list">
+                        <li><strong>Date:</strong> November 10, 2025</li>
+                        <li><strong>Time:</strong> 14:35 - 15:55 UTC</li>
+                        <li><strong>Location:</strong> Microsoft Teams</li>
+                        <li><strong>Agenda:</strong> Review action items progress and discuss Q1 2026 planning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add functionality to change content based on dropdown selection
+        document.getElementById('meetingSelect').addEventListener('change', function (e) {
+            console.log('Selected meeting:', e.target.value);
+            // You can add logic here to load different meeting data
+            // based on the selected option
+            document.getElementsByClassName('video-title')[0].innerText = e.target.options[e.target.selectedIndex].text.split(' - ')[0];
+        });
+    </script>
+</body>
+
+</html>
